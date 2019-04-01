@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>表单的校验</title>
+		<!--声明css代码域-->
+		<style type="text/css">
+			#showdiv{
+				border: solid 2px;
+				width: 500px;
+				height: 620px;
+				margin: auto;
+				border-radius: 20px;
+				position: relative;
+				top: 50px;
+			}
+			input{
+				border: solid 1px;
+			}
+			#ta tr{
+				height: 48px;
+			}
+			textarea{
+				width: 300px;
+				height: 90px;
+			}
+			#sub{
+				width: 60px;
+				height: 30px;
+			}
+			#uname,#pwd,#upwd,#phone,#email{
+				height: 22px;
+			}
+		</style>
+		<!--声明js代码域-->
+		<script type="text/javascript">
+			//封装校验
+			function testFiled(id,reg){
+				//获取元素对象
+				var inp=document.getElementById(id);
+				var name=inp.value;
+				var alt=inp.alt;
+				//获取span对象
+				var sp=document.getElementById(id+"Span");
+				//开始校验
+				if(name==""||name==null){
+					//返回校验结果
+					sp.innerHTML=alt+"不能为空";
+					sp.style.color="red";
+					return false;
+				}else if(reg.test(name)){
+					sp.innerHTML=alt+"ok";
+					sp.style.color="green";
+					return true;
+				}else{
+					sp.innerHTML=alt+"不符合规则";
+					sp.style.color="red";
+					return false;
+				}
+			}
+			//验证确认密码
+			function testUpwd(){
+				var upwd=document.getElementById("upwd");
+				var inp=upwd.value;
+				var pwd=document.getElementById("pwd").value;
+				var alt=upwd.alt;
+				var span=document.getElementById("upwdSpan");
+				if(inp==""||inp==null){
+					span.innerHTML="确认密码不能为空";
+					span.style.color="red";
+					return false;
+				}else if(inp==pwd){
+					span.innerHTML="确认密码ok"
+					span.style.color="green";
+					return true;
+				}else{
+					span.innerHTML="两次密码不一致"
+					span.style.color="red";
+					return false;
+				}
+			}
+			//验证用户名
+			function testUname(){
+				return testFiled("uname",/^[a-zA-Z]\w{5,7}$/);
+			}
+			//验证密码
+			function testPwd(){
+				return testFiled("pwd",/^[a-zA-Z]\w{5,7}$/);
+			}
+			//验证手机号码
+			function testPhone(){
+				return testFiled("phone",/^1[34578]\d{9}$/);
+			}
+			//验证电子邮箱
+			function testEmail(){
+				return testFiled("email",/^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/);
+			}
+			//验证兴趣选择
+			function testCheck(){
+				var favs=document.getElementsByName("fav");
+				var span=document.getElementById("favSpan");
+				for(var i=0;i<favs.length;i++){
+					if(favs[i].checked){
+						span.innerHTML="兴趣选择成功";
+						span.style.color="green";
+						return true;;
+					}
+				}
+				span.innerHTML="至少选择一项";
+				span.style.color="red";
+				return false;
+			}
+			function testSel(){
+				var sel=document.getElementById("sel");
+				var os=sel.options;
+				var span=document.getElementById("selSpan");
+				if(os[0].selected){
+					span.innerHTML="不能选择为“请选择”";
+					span.style.color="red";
+					return false;
+				}else{
+					span.innerHTML="选择成功";
+					span.style.color="green";
+					return true;
+				}
+			}
+			function testAgree(){
+				document.getElementById("sub").disabled=!document.getElementById("fav1").checked;
+			}
+			function testOnsubmit(){
+				return testUname()&testPwd()&testUpwd()&testPhone()&testEmail()&testCheck()&testSel();
+			}
+		</script>
+	</head>
+	<body>
+		<div id="showdiv">
+			<form action="#" method="get" onsubmit="return testOnsubmit()">
+				<table id="ta">
+					<tr>
+						<td style="width: 150px; text-align: center;">&nbsp;&nbsp;&nbsp;用户名：</td>
+						<td style="width: 350px;"><input type="text" name="uname" id="uname" value="" alt="用户名" onblur="testUname()"/>
+							<span id="unameSpan"></span>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;">&nbsp;&nbsp;&nbsp;密&nbsp;&nbsp;&nbsp;&nbsp;码：</td>
+						<td><input type="password" name="pwd" id="pwd" value="" alt="密码" onblur="testPwd()"/>
+							<span id="pwdSpan">	
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;">确认密码：</td>
+						<td><input type="password" name="upwd" id="upwd" value="" onblur="testUpwd()"/>
+							<span id="upwdSpan">	
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;">手机号码：</td>
+						<td><input type="text" name="phone" id="phone" value="" alt="手机号码" onblur="testPhone()"/>
+							<span id="phoneSpan">	
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;">电子邮箱：</td>
+						<td><input type="text" name="email" id="email" value="" alt="电子邮箱" onblur="testEmail()"/>
+							<span id="emailSpan">
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;">&nbsp;&nbsp;&nbsp;性&nbsp;&nbsp;&nbsp;&nbsp;别：</td>
+						<td>
+							<input type="radio" name="ra" id="ra" value="" checked="checked"/>男
+							<input type="radio" name="ra" id="ra" value="" />女
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;" rowspan="2">&nbsp;&nbsp;&nbsp;兴&nbsp;&nbsp;&nbsp;&nbsp;趣：</td>
+						<td rowspan="2">
+							<input type="checkbox" name="fav" id="fav" value="" onclick="testCheck()"/>Java &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="checkbox" name="fav" id="fav" value="" onclick="testCheck()"/>HTML <br /><br />
+							<input type="checkbox" name="fav" id="fav" value="" onclick="testCheck()"/>Javascript &nbsp;&nbsp;&nbsp;
+							<input type="checkbox" name="fav" id="fav" value="" onclick="testCheck()"/>PHP  &nbsp;&nbsp;
+							<span id="favSpan">	
+							</span>
+						</td>
+					</tr>
+					<tr>
+					</tr>
+					
+					<tr>
+						<td style="text-align: center;">所在城市：</td>
+						<td>
+							<select name="sel" id="sel" style="border: solid 1px darkgreen; height: 25px;" onchange="testSel()">
+								<option value="0" style="color: darkcyan;">--请选择--</option>
+								<option value="1">北京</option>
+								<option value="2">上海</option>
+								<option value="3">杭州</option>
+							</select>
+							<span id="selSpan">
+								
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td rowspan="2" style="text-align: center;">个人介绍：</td>
+						<td rowspan="2">
+							<textarea id="area">
+							</textarea>
+						</td>
+					</tr>
+					<tr>
+					</tr>
+					<tr style="height: 30px; text-align: center;">
+						<td colspan="2">
+							<input type="checkbox" name="fav1" id="fav1" value="" onclick="testAgree()"/>是否同意该条款
+						</td>
+					</tr>
+					<tr style="height: 30px; text-align: center;">
+						<td colspan="2" >
+							<input type="submit" name="sub" id="sub" value="提交" disabled="disabled"/>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+</html>
